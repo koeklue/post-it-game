@@ -1,20 +1,22 @@
 extends Node2D
 
-## Phase 1: wires the spawner to freshly spawned targets and reports raw hit data.
-## Score, streak and speed logic follow in phase 2.
+## Phase 2: connects targets, game state and HUD.
+## Main is the only node that knows all three - they stay unaware of each other.
 
 @onready var _spawner: Spawner = $Spawner
-@onready var _debug_label: Label = $UI/DebugLabel
-
-var _enemies_hit: int = 0
-var _civilians_hit: int = 0
-var _expired: int = 0
+@onready var _game_state: GameState = $GameState
+@onready var _hud: HUD = $UI/HUD
 
 
 func _ready() -> void:
+	_game_state.score_changed.connect(_hud.update_score)
+	_game_state.streak_changed.connect(_hud.update_streak)
+	_game_state.speed_changed.connect(_on_speed_changed)
+
 	_spawner.target_spawned.connect(_on_target_spawned)
+
+	_game_state.reset()
 	_spawner.start()
-	_update_debug_label()
 
 
 ## Every target reports back through signals instead of reaching into the main scene.
@@ -25,18 +27,17 @@ func _on_target_spawned(target: Target) -> void:
 
 func _on_target_hit(target: Target) -> void:
 	if target.type == Target.Type.ENEMY:
-		_enemies_hit += 1
+		_game_state.register_enemy_hit()
 	else:
-		_civilians_hit += 1
-	_update_debug_label()
+		_game_state.register_civilian_hit()
 
 
-func _on_target_expired(_target: Target) -> void:
-	_expired += 1
-	_update_debug_label()
+func _on_target_expired(target: Target) -> void:
+	# Letting a civilian disappear is correct play, only missed enemies hurt.
+	if target.type == Target.Type.ENEMY:
+		_game_state.register_enemy_missed()
 
 
-func _update_debug_label() -> void:
-	_debug_label.text = "Enemies: %d\nCivilians: %d\nExpired: %d" % [
-		_enemies_hit, _civilians_hit, _expired
-	]
+func _on_speed_changed(speed_factor: float) -> void:
+	_spawner.speed_factor = speed_factor
+	_hud.update_speed(speed_factor)

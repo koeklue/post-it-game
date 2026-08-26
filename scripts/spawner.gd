@@ -19,7 +19,7 @@ const MIN_GAP := 12.0 # extra pixels kept between two targets
 @export_range(0.0, 1.0) var civilian_chance: float = 0.30
 @export var max_active: int = 6
 
-## Scales spawn rate and lifetime. The streak / heat system will drive this later.
+## Scales spawn rate and lifetime, driven by GameState.
 var speed_factor: float = 1.0
 ## Multiplies target size. Trackpad mode will set this to 0.8.
 var radius_factor: float = 1.0
@@ -28,6 +28,7 @@ var radius_factor: float = 1.0
 
 
 func _ready() -> void:
+	# Debug-only guards: unassigned exports otherwise fail deep inside _try_spawn().
 	assert(target_scene != null, "Spawner: target_scene is not assigned in the inspector")
 	assert(targets_root != null, "Spawner: targets_root is not assigned in the inspector")
 	_spawn_timer.timeout.connect(_on_spawn_timer_timeout)

@@ -8,4 +8,5 @@ script = ExtResource("1_b37e2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1412876062]
 
 [node name="LifetimeTimer" type="Timer" parent="." unique_id=1324876896]
+wait_time = 2.0
 one_shot = true
