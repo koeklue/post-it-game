@@ -36,6 +36,25 @@ theme_override_font_sizes/font_size = 24
 text = "Score: 0"
 horizontal_alignment = 1
 
+[node name="EntryRow" type="HBoxContainer" parent="Center/Panel/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NameEdit" type="LineEdit" parent="Center/Panel/Rows/EntryRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+placeholder_text = "Your name"
+max_length = 12
+
+[node name="SubmitButton" type="Button" parent="Center/Panel/Rows/EntryRow"]
+layout_mode = 2
+text = "Save score"
+
+[node name="ListLabel" type="Label" parent="Center/Panel/Rows"]
+layout_mode = 2
+text = "no entries yet"
+horizontal_alignment = 1
+
 [node name="RestartButton" type="Button" parent="Center/Panel/Rows"]
 layout_mode = 2
 text = "Play again"

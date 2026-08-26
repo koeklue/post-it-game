@@ -12,12 +12,14 @@ enum Phase { READY, PLAYING, OVER }
 @onready var _heat_system: HeatSystem = $HeatSystem
 @onready var _targets: Node2D = $Targets
 @onready var _round_timer: Timer = $RoundTimer
+@onready var _leaderboard: Leaderboard = $Leaderboard
 @onready var _hud: HUD = $UI/HUD
 @onready var _start_screen: StartScreen = $UI/StartScreen
 @onready var _game_over_screen: GameOverScreen = $UI/GameOverScreen
 @onready var _pause_screen: PauseScreen = $UI/PauseScreen
 
 var _phase: Phase = Phase.READY
+var _current_mode: InputMode.Mode = InputMode.Mode.MOUSE
 
 
 func _ready() -> void:
@@ -34,6 +36,7 @@ func _ready() -> void:
 	_round_timer.timeout.connect(_on_round_finished)
 	_start_screen.start_requested.connect(_start_round)
 	_game_over_screen.restart_requested.connect(_show_start_screen)
+	_game_over_screen.score_submitted.connect(_on_score_submitted)
 	_pause_screen.menu_requested.connect(_show_start_screen)
 
 	_show_start_screen()
@@ -61,6 +64,7 @@ func _show_start_screen() -> void:
 func _start_round(mode: InputMode.Mode) -> void:
 	_phase = Phase.PLAYING
 	_pause_screen.can_pause = true
+	_current_mode = mode
 	_start_screen.hide()
 
 	_spawner.set_input_mode(mode)
@@ -77,7 +81,23 @@ func _on_round_finished() -> void:
 	_spawner.stop()
 	_clear_targets() # leftover targets would still be clickable behind the overlay
 	_hud.update_time(0.0)
-	_game_over_screen.show_result(_game_state.score, _game_state.best_streak)
+
+	var can_submit := _leaderboard.qualifies(_game_state.score, _current_mode)
+	_game_over_screen.show_result(
+		_game_state.score, _game_state.best_streak, _leaderboard.last_name, can_submit
+	)
+	_refresh_leaderboard()
+
+
+func _on_score_submitted(player_name: String) -> void:
+	var rank := _leaderboard.add_entry(player_name, _game_state.score, _current_mode)
+	_game_over_screen.show_rank(rank)
+	_refresh_leaderboard()
+
+
+func _refresh_leaderboard() -> void:
+	var title := "Trackpad Mode - Top 10" if _current_mode == InputMode.Mode.TRACKPAD else "Mouse Mode - Top 10"
+	_game_over_screen.update_list(_leaderboard.get_entries(_current_mode), title)
 
 
 func _clear_targets() -> void:

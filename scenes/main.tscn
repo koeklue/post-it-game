@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/start_screen.tscn" id="5_tipki"]
 [ext_resource type="PackedScene" path="res://scenes/game_over_screen.tscn" id="6_85g3d"]
 [ext_resource type="Script" uid="uid://c3l4laih0bvwu" path="res://scripts/heat_system.gd" id="6_tefeu"]
+[ext_resource type="Script" uid="uid://dpc6g4yjr1kf4" path="res://scripts/leaderboard.gd" id="10_choun"]
 
 [node name="Main" type="Node2D" unique_id=543210363]
 script = ExtResource("1_0wfyh")
@@ -56,3 +57,6 @@ one_shot = true
 
 [node name="RoundTimer" type="Timer" parent="." unique_id=1085571832]
 one_shot = true
+
+[node name="Leaderboard" type="Node2D" parent="." unique_id=1478257461]
+script = ExtResource("10_choun")
