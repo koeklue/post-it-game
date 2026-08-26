@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://ctuhahstvsf33"]
 
-[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://c3aitbgve36b6" path="res://scripts/hud.gd" id="1_hud"]
 
-[node name="HUD" type="Control"]
+[node name="HUD" type="Control" unique_id=2010783716]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,8 +12,8 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_hud")
 
-[node name="Margin" type="MarginContainer" parent="."]
-anchors_preset = 15
+[node name="Margin" type="MarginContainer" parent="." unique_id=900446828]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -21,23 +22,36 @@ mouse_filter = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 16
 
-[node name="Rows" type="VBoxContainer" parent="Margin"]
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=1873326329]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="ScoreLabel" type="Label" parent="Margin/Rows"]
+[node name="ScoreLabel" type="Label" parent="Margin/Rows" unique_id=2141781790]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 26
 text = "Score: 0"
 
-[node name="StreakLabel" type="Label" parent="Margin/Rows"]
+[node name="StreakLabel" type="Label" parent="Margin/Rows" unique_id=431965114]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 26
 text = "Streak: 0"
 
-[node name="SpeedLabel" type="Label" parent="Margin/Rows"]
+[node name="SpeedLabel" type="Label" parent="Margin/Rows" unique_id=1337185547]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 26
 text = "Speed: x1.00"
+
+[node name="HeatLabel" type="Label" parent="Margin/Rows" unique_id=299372275]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 26
+text = "Heat: ready"

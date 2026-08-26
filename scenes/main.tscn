@@ -3,15 +3,18 @@
 [ext_resource type="Script" uid="uid://df6qmkiwed4os" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Script" uid="uid://d1ipb3kjyubha" path="res://scripts/spawner.gd" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://lf7ggvdx8t7b" path="res://scenes/target.tscn" id="3_sugp2"]
-[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="4_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://ctuhahstvsf33" path="res://scenes/hud.tscn" id="4_jyhfs"]
 [ext_resource type="Script" uid="uid://hf4quywn5n7c" path="res://scripts/game_state.gd" id="5_tbgi4"]
+[ext_resource type="Script" uid="uid://c3l4laih0bvwu" path="res://scripts/heat_system.gd" id="6_tefeu"]
 
 [node name="Main" type="Node2D" unique_id=543210363]
 script = ExtResource("1_0wfyh")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1945704885]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 1152.0
+offset_bottom = 648.0
+mouse_filter = 2
+color = Color(0.56072026, 0.6314285, 0.71569616, 1)
 
 [node name="Targets" type="Node2D" parent="." unique_id=296137889]
 
@@ -30,4 +33,11 @@ script = ExtResource("5_tbgi4")
 [node name="UI" type="CanvasLayer" parent="." unique_id=1336302401]
 
 [node name="HUD" parent="UI" unique_id=1191610776 instance=ExtResource("4_jyhfs")]
-layout_mode = 3
+
+[node name="HeatSystem" type="Node2D" parent="." unique_id=2061603220]
+script = ExtResource("6_tefeu")
+streak_threshold = 7
+heat_multiplier = 1.6
+
+[node name="PhaseTimer" type="Timer" parent="HeatSystem" unique_id=989198530]
+one_shot = true
