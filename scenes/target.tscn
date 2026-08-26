@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://lf7ggvdx8t7b"]
+
+[ext_resource type="Script" uid="uid://ddg6s3jvkfk3o" path="res://scripts/target.gd" id="1_b37e2"]
+
+[node name="Target" type="Area2D" unique_id=428633367]
+script = ExtResource("1_b37e2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1412876062]
+
+[node name="LifetimeTimer" type="Timer" parent="." unique_id=1324876896]
+one_shot = true

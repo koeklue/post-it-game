@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://icdy231ar345"]
+
+[ext_resource type="Script" uid="uid://df6qmkiwed4os" path="res://scripts/main.gd" id="1_0wfyh"]
+[ext_resource type="Script" uid="uid://d1ipb3kjyubha" path="res://scripts/spawner.gd" id="2_sugp2"]
+[ext_resource type="PackedScene" uid="uid://lf7ggvdx8t7b" path="res://scenes/target.tscn" id="3_sugp2"]
+
+[node name="Main" type="Node2D" unique_id=543210363]
+script = ExtResource("1_0wfyh")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1945704885]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Targets" type="Node2D" parent="." unique_id=296137889]
+
+[node name="Spawner" type="Node2D" parent="." unique_id=1719513311 node_paths=PackedStringArray("targets_root")]
+script = ExtResource("2_sugp2")
+target_scene = ExtResource("3_sugp2")
+targets_root = NodePath("../Targets")
+
+[node name="SpawnTimer" type="Timer" parent="Spawner" unique_id=23487586]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1336302401]
+
+[node name="DebugLabel" type="Label" parent="UI" unique_id=1396179022]
+offset_right = 40.0
+offset_bottom = 23.0
