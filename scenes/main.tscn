@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://lf7ggvdx8t7b" path="res://scenes/target.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://ctuhahstvsf33" path="res://scenes/hud.tscn" id="4_jyhfs"]
 [ext_resource type="Script" uid="uid://hf4quywn5n7c" path="res://scripts/game_state.gd" id="5_tbgi4"]
+[ext_resource type="PackedScene" path="res://scenes/start_screen.tscn" id="5_tipki"]
+[ext_resource type="PackedScene" path="res://scenes/game_over_screen.tscn" id="6_85g3d"]
 [ext_resource type="Script" uid="uid://c3l4laih0bvwu" path="res://scripts/heat_system.gd" id="6_tefeu"]
 
 [node name="Main" type="Node2D" unique_id=543210363]
@@ -32,6 +34,12 @@ script = ExtResource("5_tbgi4")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1336302401]
 
+[node name="StartScreen" parent="UI" unique_id=1023249912 instance=ExtResource("5_tipki")]
+layout_mode = 3
+
+[node name="GameOverScreen" parent="UI" unique_id=669389372 instance=ExtResource("6_85g3d")]
+layout_mode = 3
+
 [node name="HUD" parent="UI" unique_id=1191610776 instance=ExtResource("4_jyhfs")]
 
 [node name="HeatSystem" type="Node2D" parent="." unique_id=2061603220]
@@ -40,4 +48,7 @@ streak_threshold = 7
 heat_multiplier = 1.6
 
 [node name="PhaseTimer" type="Timer" parent="HeatSystem" unique_id=989198530]
+one_shot = true
+
+[node name="RoundTimer" type="Timer" parent="." unique_id=1085571832]
 one_shot = true

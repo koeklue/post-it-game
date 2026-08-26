@@ -4,7 +4,7 @@ extends Control
 ## Passive display - receives values through signals, holds no game logic itself.
 
 const HEAT_COLORS := {
-	HeatSystem.State.IDLE: Color("6cb36dff"),
+	HeatSystem.State.IDLE: Color("9aa0a6"),
 	HeatSystem.State.HEAT: Color("ff9d3d"),
 	HeatSystem.State.COOLDOWN: Color("6ba7ff"),
 }
@@ -13,13 +13,8 @@ const HEAT_COLORS := {
 @onready var _streak_label: Label = $Margin/Rows/StreakLabel
 @onready var _speed_label: Label = $Margin/Rows/SpeedLabel
 @onready var _heat_label: Label = $Margin/Rows/HeatLabel
+@onready var _time_label: Label = $Margin/Rows/TimeLabel
 
-
-func _ready() -> void:
-	# The HUD spans the play area, so no control may swallow clicks meant for targets.
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for child in find_children("*", "Control", true, false):
-		(child as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func update_score(value: int) -> void:
 	_score_label.text = "Score: %d" % value
@@ -31,6 +26,10 @@ func update_streak(value: int) -> void:
 
 func update_speed(value: float) -> void:
 	_speed_label.text = "Speed: x%.2f" % value
+
+
+func update_time(seconds: float) -> void:
+	_time_label.text = "Time: %.1f" % maxf(seconds, 0.0)
 
 
 func update_heat_state(state: HeatSystem.State) -> void:

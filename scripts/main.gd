@@ -1,12 +1,22 @@
 extends Node2D
 
-## Phase 3: connects targets, game state, heat system and HUD.
-## Main is the only node that knows all four - they stay unaware of each other.
+## Phase 4: owns the round flow - start screen, timed round, game over screen.
+## Main is the only node that knows all systems, they stay unaware of each other.
+
+enum Phase { READY, PLAYING, OVER }
+
+@export var round_duration: float = 45.0
 
 @onready var _spawner: Spawner = $Spawner
 @onready var _game_state: GameState = $GameState
 @onready var _heat_system: HeatSystem = $HeatSystem
+@onready var _targets: Node2D = $Targets
+@onready var _round_timer: Timer = $RoundTimer
 @onready var _hud: HUD = $UI/HUD
+@onready var _start_screen: StartScreen = $UI/StartScreen
+@onready var _game_over_screen: GameOverScreen = $UI/GameOverScreen
+
+var _phase: Phase = Phase.READY
 
 
 func _ready() -> void:
@@ -20,10 +30,54 @@ func _ready() -> void:
 	_heat_system.state_changed.connect(_hud.update_heat_state)
 
 	_spawner.target_spawned.connect(_on_target_spawned)
+	_round_timer.timeout.connect(_on_round_finished)
+	_start_screen.start_requested.connect(_start_round)
+	_game_over_screen.restart_requested.connect(_show_start_screen)
 
+	_show_start_screen()
+
+
+func _process(_delta: float) -> void:
+	# Polling the timer is simpler than mirroring the remaining time in a variable.
+	if _phase == Phase.PLAYING:
+		_hud.update_time(_round_timer.time_left)
+
+
+func _show_start_screen() -> void:
+	_phase = Phase.READY
+	_spawner.stop()
+	_clear_targets()
 	_heat_system.reset()
 	_game_state.reset()
+	_hud.update_time(round_duration)
+
+	_game_over_screen.hide()
+	_start_screen.show()
+
+
+func _start_round(mode: InputMode.Mode) -> void:
+	_phase = Phase.PLAYING
+	_start_screen.hide()
+
+	_spawner.set_input_mode(mode)
+	_heat_system.reset()
+	_game_state.reset()
+
+	_round_timer.start(round_duration)
 	_spawner.start()
+
+
+func _on_round_finished() -> void:
+	_phase = Phase.OVER
+	_spawner.stop()
+	_clear_targets() # leftover targets would still be clickable behind the overlay
+	_hud.update_time(0.0)
+	_game_over_screen.show_result(_game_state.score, _game_state.best_streak)
+
+
+func _clear_targets() -> void:
+	for child in _targets.get_children():
+		child.queue_free()
 
 
 ## Every target reports back through signals instead of reaching into the main scene.

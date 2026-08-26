@@ -21,8 +21,9 @@ const MIN_GAP := 12.0 # extra pixels kept between two targets
 
 ## Scales spawn rate and lifetime, driven by GameState.
 var speed_factor: float = 1.0
-## Multiplies target size. Trackpad mode will set this to 0.8.
+## Multiplies target size, driven by the active input mode.
 var radius_factor: float = 1.0
+var input_mode: InputMode.Mode = InputMode.Mode.MOUSE
 
 @onready var _spawn_timer: Timer = $SpawnTimer
 
@@ -32,6 +33,12 @@ func _ready() -> void:
 	assert(target_scene != null, "Spawner: target_scene is not assigned in the inspector")
 	assert(targets_root != null, "Spawner: targets_root is not assigned in the inspector")
 	_spawn_timer.timeout.connect(_on_spawn_timer_timeout)
+
+
+## Trackpad targets are smaller and are hit by dwelling instead of clicking.
+func set_input_mode(mode: InputMode.Mode) -> void:
+	input_mode = mode
+	radius_factor = InputMode.TRACKPAD_RADIUS_FACTOR if mode == InputMode.Mode.TRACKPAD else 1.0
 
 
 func start() -> void:
@@ -63,7 +70,8 @@ func _try_spawn() -> void:
 
 	var target: Target = target_scene.instantiate()
 	var type := Target.Type.CIVILIAN if randf() < civilian_chance else Target.Type.ENEMY
-	target.setup(type, radius, base_lifetime / speed_factor)
+	var hover_time: float = InputMode.TRACKPAD_HOVER_TIME if input_mode == InputMode.Mode.TRACKPAD else 0.0
+	target.setup(type, radius, base_lifetime / speed_factor, hover_time)
 	target.position = spawn_position
 	targets_root.add_child(target)
 	target_spawned.emit(target)
