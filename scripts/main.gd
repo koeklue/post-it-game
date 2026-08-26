@@ -15,6 +15,7 @@ enum Phase { READY, PLAYING, OVER }
 @onready var _hud: HUD = $UI/HUD
 @onready var _start_screen: StartScreen = $UI/StartScreen
 @onready var _game_over_screen: GameOverScreen = $UI/GameOverScreen
+@onready var _pause_screen: PauseScreen = $UI/PauseScreen
 
 var _phase: Phase = Phase.READY
 
@@ -33,6 +34,7 @@ func _ready() -> void:
 	_round_timer.timeout.connect(_on_round_finished)
 	_start_screen.start_requested.connect(_start_round)
 	_game_over_screen.restart_requested.connect(_show_start_screen)
+	_pause_screen.menu_requested.connect(_show_start_screen)
 
 	_show_start_screen()
 
@@ -45,6 +47,7 @@ func _process(_delta: float) -> void:
 
 func _show_start_screen() -> void:
 	_phase = Phase.READY
+	_pause_screen.can_pause = false
 	_spawner.stop()
 	_clear_targets()
 	_heat_system.reset()
@@ -57,6 +60,7 @@ func _show_start_screen() -> void:
 
 func _start_round(mode: InputMode.Mode) -> void:
 	_phase = Phase.PLAYING
+	_pause_screen.can_pause = true
 	_start_screen.hide()
 
 	_spawner.set_input_mode(mode)
@@ -69,6 +73,7 @@ func _start_round(mode: InputMode.Mode) -> void:
 
 func _on_round_finished() -> void:
 	_phase = Phase.OVER
+	_pause_screen.can_pause = false
 	_spawner.stop()
 	_clear_targets() # leftover targets would still be clickable behind the overlay
 	_hud.update_time(0.0)
